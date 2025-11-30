@@ -1,4 +1,3 @@
-use crate::constants::{is_code_extension, is_code_filename, should_exclude_dir};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::path::Path;
@@ -42,15 +41,6 @@ impl DirectoryTreeBuilder {
             .duration_since(UNIX_EPOCH)
             .unwrap_or_default()
             .as_secs()
-    }
-
-    fn is_code_file(name: &str) -> bool {
-        if let Some(ext) = Path::new(name).extension().and_then(|s| s.to_str()) {
-            is_code_extension(ext)
-        } else {
-            // Check files without extensions that are typically code files
-            is_code_filename(name)
-        }
     }
 
     fn get_file_metadata(path: &Path) -> Option<(u64, u64)> {
@@ -130,7 +120,6 @@ impl DirectoryTreeBuilder {
         let (modified_time, size) = Self::get_file_metadata(path).unwrap_or((timestamp, 0));
 
         if path.is_file() {
-            let is_git_ignored = should_exclude_dir(&name);
             return Ok(FileNode {
                 name,
                 path: path_str,
@@ -140,7 +129,7 @@ impl DirectoryTreeBuilder {
                 has_children: None,
                 modified_time: Some(modified_time),
                 size: Some(size),
-                is_git_ignored: Some(is_git_ignored),
+                is_git_ignored: Some(false),
             });
         }
 
@@ -164,18 +153,8 @@ impl DirectoryTreeBuilder {
         let should_lazy_load = current_depth >= max_depth || entries.len() > 100;
 
         if should_lazy_load {
-            let has_children = entries.iter().any(|entry| {
-                let entry_path = entry.path();
-                let entry_name = entry.file_name().to_string_lossy().to_string(); // Convert to owned String
+            let has_children = !entries.is_empty();
 
-                if entry_path.is_dir() {
-                    !should_exclude_dir(&entry_name)
-                } else {
-                    Self::is_code_file(&entry_name)
-                }
-            });
-
-            let is_git_ignored = should_exclude_dir(&name);
             return Ok(FileNode {
                 name,
                 path: path_str,
@@ -185,7 +164,7 @@ impl DirectoryTreeBuilder {
                 has_children: Some(has_children),
                 modified_time: Some(modified_time),
                 size: Some(size),
-                is_git_ignored: Some(is_git_ignored),
+                is_git_ignored: Some(false),
             });
         }
 
@@ -194,18 +173,10 @@ impl DirectoryTreeBuilder {
 
         for entry in entries {
             let entry_path = entry.path();
-            let entry_name = entry.file_name().to_string_lossy().to_string(); // Convert to owned String
+            let entry_name = entry.file_name().to_string_lossy().to_string();
 
-            // Skip parent directory reference
-            if entry_name == ".." {
-                continue;
-            }
-
-            if entry_path.is_dir() && should_exclude_dir(&entry_name) {
-                continue;
-            }
-
-            if entry_path.is_file() && !Self::is_code_file(&entry_name) {
+            // Skip parent directory reference and .git directory
+            if entry_name == ".." || (entry_path.is_dir() && entry_name == ".git") {
                 continue;
             }
 
@@ -224,7 +195,6 @@ impl DirectoryTreeBuilder {
             }
         });
 
-        let is_git_ignored = should_exclude_dir(&name);
         Ok(FileNode {
             name,
             path: path_str,
@@ -234,7 +204,7 @@ impl DirectoryTreeBuilder {
             has_children: None,
             modified_time: Some(modified_time),
             size: Some(size),
-            is_git_ignored: Some(is_git_ignored),
+            is_git_ignored: Some(false),
         })
     }
 
@@ -279,18 +249,10 @@ impl DirectoryTreeBuilder {
 
         for entry in entries {
             let entry_path = entry.path();
-            let entry_name = entry.file_name().to_string_lossy().to_string(); // Convert to owned String
+            let entry_name = entry.file_name().to_string_lossy().to_string();
 
-            // Skip parent directory reference
-            if entry_name == ".." {
-                continue;
-            }
-
-            if entry_path.is_dir() && should_exclude_dir(&entry_name) {
-                continue;
-            }
-
-            if entry_path.is_file() && !Self::is_code_file(&entry_name) {
+            // Skip parent directory reference and .git directory
+            if entry_name == ".." || (entry_path.is_dir() && entry_name == ".git") {
                 continue;
             }
 
