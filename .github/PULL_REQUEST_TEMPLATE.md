@@ -47,11 +47,7 @@ Related to #
 
 ### Test Plan
 
-- [ ] Tested on macOS (specify version: ______)
-- [ ] Manual testing completed
 - [ ] Added/updated unit tests
-- [ ] Added/updated integration tests
-- [ ] All existing tests pass
 
 ### How to Test
 
@@ -69,22 +65,7 @@ Paste test output here
 
 <!-- Mark completed items with "x" -->
 
-- [ ] My code follows the project's code style guidelines
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
-- [ ] My changes generate no new warnings or errors
 - [ ] I have added tests that prove my fix is effective or that my feature works
-- [ ] New and existing unit tests pass locally with my changes
-- [ ] Any dependent changes have been merged and published
-
-## Performance Impact
-
-<!-- Describe any performance implications of your changes -->
-
-- [ ] No performance impact
-- [ ] Performance improved
-- [ ] Performance regressed (please explain why this is acceptable)
 
 **Details:**
 
@@ -95,13 +76,6 @@ Paste test output here
 **Impact:**
 
 **Migration Guide:**
-
-## Dependencies
-
-<!-- List any new dependencies added or updated -->
-
-- [ ] No new dependencies
-- [ ] New dependencies added (list below)
 
 **New/Updated Dependencies:**
 
