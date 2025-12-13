@@ -20,6 +20,34 @@ export interface ChangelogEntry {
 // Only include the most recent versions that users care about
 export const CHANGELOG_DATA: ChangelogEntry[] = [
   {
+    version: '0.1.18',
+    date: '2025-12-13',
+    en: {
+      added: [
+        'Editor Lint feature with real-time syntax checking and quick fixes',
+        'GPT 5.2 model support',
+        'New feature documentation: Coding Plan, Web Search, Voice Input, Code Lint',
+      ],
+      changed: ['Improved Web Search tool', 'Improved Web Fetch tool'],
+      fixed: [
+        'Fixed Windows PowerShell terminal bug',
+        'Fixed missing environment variables due to not correctly reading bashrc/zshrc',
+      ],
+    },
+    zh: {
+      added: [
+        '编辑器代码检查功能 (Editor Lint)，支持实时语法检查和快速修复',
+        'GPT 5.2 模型支持',
+        '新增功能文档：Coding Plan、网页搜索、语音输入、代码检查',
+      ],
+      changed: ['改进网页搜索工具', '改进 Web fetch 工具'],
+      fixed: [
+        '修复 Windows PowerShell 终端 bug',
+        '修复没有正确获取 bashrc/zshrc 导致环境变量缺失的问题',
+      ],
+    },
+  },
+  {
     version: '0.1.17',
     date: '2025-12-11',
     en: {
